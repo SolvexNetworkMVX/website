@@ -1,24 +1,51 @@
-// Fetch token statistics from MultiversX API
-async function fetchTokenStats() {
+// Chart Data and Configuration
+let chartData = {
+    labels: [],
+    datasets: [{
+        label: 'SVX Price (USD)',
+        data: [],
+        borderColor: '#00ffcc',
+        backgroundColor: 'rgba(0, 255, 204, 0.2)',
+        tension: 0.4,
+        fill: true
+    }]
+};
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: { display: false },
+        y: { beginAtZero: false, ticks: { color: '#ffffff' } }
+    },
+    plugins: {
+        legend: { labels: { color: '#ffffff' } },
+        tooltip: { backgroundColor: '#1a1a3a', titleColor: '#00ffcc', bodyColor: '#ffffff' }
+    }
+};
+
+let svxChart;
+
+// Fetch token statistics and update chart
+async function fetchTokenStats(timeframe = '1h') {
     try {
         const response = await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1');
         if (!response.ok) throw new Error('API request failed');
         const data = await response.json();
-        
-        // Update dashboard with fetched data
+
+        // Update stats
         document.getElementById('holders').textContent = data.accounts ? data.accounts : 'N/A';
-        document.getElementById('transfers').textContent = data.transfers ? data.transfers : 'N/A'; // Using transfers (e.g., 66)
-        
-        // Price with 2 decimals
+        document.getElementById('transfers').textContent = data.transfers ? data.transfers : 'N/A';
         document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
-        
-        // Calculate market cap: price * supply, no decimals
-        const supply = data.supply ? parseFloat(data.supply) : 9524; // Fallback to static 9524
+        const supply = data.supply ? parseFloat(data.supply) : 9524;
         const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
         document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
-        
-        // Total supply from API or static fallback
         document.getElementById('total-supply').textContent = data.supply ? data.supply : '9524';
+
+        // Update chart
+        const price = data.price ? data.price : 0;
+        const time = new Date().toLocaleTimeString();
+        updateChartData(time, price, timeframe);
     } catch (error) {
         console.error('Error fetching token stats:', error);
         document.getElementById('holders').textContent = 'N/A';
@@ -29,10 +56,53 @@ async function fetchTokenStats() {
     }
 }
 
-// Run fetch on page load
+// Update Chart Data Based on Timeframe
+function updateChartData(time, price, timeframe) {
+    if (!svxChart) {
+        const ctx = document.getElementById('svxChart').getContext('2d');
+        svxChart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: chartOptions
+        });
+    }
+
+    chartData.labels.push(time);
+    chartData.datasets[0].data.push(price);
+
+    // Limit data points based on timeframe
+    const maxPoints = getMaxPoints(timeframe);
+    if (chartData.labels.length > maxPoints) {
+        chartData.labels.shift();
+        chartData.datasets[0].data.shift();
+    }
+
+    svxChart.update();
+}
+
+function getMaxPoints(timeframe) {
+    const now = new Date();
+    switch (timeframe) {
+        case '1h': return 360; // ~10s intervals for 1 hour
+        case '24h': return 8640; // ~10s intervals for 24 hours
+        case '7d': return 60480; // ~10s intervals for 7 days
+        default: return 360;
+    }
+}
+
+// Timeframe Controls
+function setTimeframe(timeframe) {
+    document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.timeframe-btn[data-timeframe="${timeframe}"]`).classList.add('active');
+    chartData.labels = [];
+    chartData.datasets[0].data = [];
+    fetchTokenStats(timeframe);
+}
+
+// Run on page load
 document.addEventListener('DOMContentLoaded', () => {
-    fetchTokenStats();
-    setInterval(fetchTokenStats, 30000);
+    fetchTokenStats('1h');
+    setInterval(() => fetchTokenStats(document.querySelector('.timeframe-btn.active')?.dataset.timeframe || '1h'), 10000);
 
     // Hamburger Menu Toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -55,4 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Timeframe Button Event Listeners
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.addEventListener('click', () => setTimeframe(btn.dataset.timeframe));
+    });
+    document.querySelector('.timeframe-btn[data-timeframe="1h"]').classList.add('active');
 });
