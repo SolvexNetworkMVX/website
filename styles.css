@@ -9,6 +9,7 @@ body {
     background: #0a0a1a;
     color: #ffffff;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 .container {
@@ -25,6 +26,7 @@ header {
     width: 100%;
     top: 0;
     z-index: 1000;
+    transition: background 0.3s ease;
 }
 
 header .container {
@@ -44,49 +46,105 @@ header .container {
     color: #00ccaa;
 }
 
-nav ul {
+nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-menu {
     display: flex;
     list-style: none;
 }
 
-nav ul li {
+.nav-menu li {
     margin-left: 30px;
 }
 
-nav ul li a {
+.nav-menu li a {
     color: #ffffff;
     text-decoration: none;
     font-size: 1.1rem;
     transition: color 0.3s ease;
 }
 
-nav ul li a:hover {
+.nav-menu li a:hover {
     color: #00ffcc;
+}
+
+/* Hamburger Menu */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: #ffffff;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+    }
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background: #1a1a3a;
+        flex-direction: column;
+        padding: 20px 0;
+        text-align: center;
+    }
+    .nav-menu.active {
+        display: flex;
+    }
+    .nav-menu li {
+        margin: 15px 0;
+    }
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+    }
 }
 
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
-    padding: 150px 0 100px;
+    padding: 200px 0 120px;
     text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .hero h2 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: 20px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
 
 .hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
+    font-size: 1.3rem;
+    margin-bottom: 40px;
     animation: fadeIn 1s ease-in 0.3s both;
 }
 
 .btn {
     display: inline-block;
-    padding: 12px 30px;
+    padding: 15px 35px;
     background: #00ffcc;
     color: #0a0a1a;
     text-decoration: none;
@@ -106,14 +164,15 @@ nav ul li a:hover {
 
 /* Dashboard Section */
 .dashboard {
-    padding: 80px 0;
+    padding: 100px 0;
     background: #12122a;
+    min-height: 80vh;
 }
 
 .dashboard h2 {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 40px;
+    font-size: 2.8rem;
+    margin-bottom: 50px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
@@ -121,65 +180,72 @@ nav ul li a:hover {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 30px;
+    justify-items: center;
 }
 
 .stat-card {
     background: #1a1a3a;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 30px;
+    border-radius: 15px;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    max-width: 250px;
 }
 
 .stat-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+    transform: translateY(-15px);
+    box-shadow: 0 15px 25px rgba(0, 255, 204, 0.3);
 }
 
 .stat-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
 }
 
 .stat-card p {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #00ffcc;
 }
 
 /* General Section */
 .section {
-    padding: 80px 0;
+    padding: 120px 0;
     text-align: center;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 2.8rem;
+    margin-bottom: 30px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
 
 .section p {
-    font-size: 1.1rem;
-    max-width: 800px;
-    margin: 0 auto 30px;
+    font-size: 1.2rem;
+    max-width: 900px;
+    margin: 0 auto 40px;
 }
 
 /* Social Section */
 .link-buttons .btn {
-    margin: 10px;
+    margin: 15px;
 }
 
 /* Footer */
 footer {
     background: #1a1a3a;
-    padding: 20px 0;
+    padding: 30px 0;
     text-align: center;
 }
 
 footer p {
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 /* Animations */
@@ -191,27 +257,28 @@ footer p {
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero h2 {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
     .hero p {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
     .cta-buttons .btn {
         display: block;
-        margin: 10px auto;
+        margin: 15px auto;
         width: 200px;
-    }
-    nav ul {
-        flex-direction: column;
-        text-align: center;
-    }
-    nav ul li {
-        margin: 10px 0;
     }
     .stats-grid {
         grid-template-columns: 1fr;
     }
     .dashboard h2, .section h2 {
-        font-size: 2rem;
+        font-size: 2.2rem;
+    }
+    .section {
+        padding: 80px 0;
+        min-height: 50vh;
+    }
+    .hero {
+        padding: 150px 0 80px;
+        min-height: 90vh;
     }
 }
