@@ -7,14 +7,14 @@ async function fetchTokenStats() {
         
         // Update dashboard with fetched data
         document.getElementById('holders').textContent = data.accounts ? data.accounts : 'N/A';
-        document.getElementById('transactions').textContent = data.transactions ? data.transactions : 'N/A'; // Still using transactions as a proxy for transfers
+        document.getElementById('transfers').textContent = data.transfers ? data.transfers : 'N/A'; // Using transfers (e.g., 66)
         
         // Price with 2 decimals
         document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
         
-        // Calculate market cap: price * supply
+        // Calculate market cap: price * supply, no decimals
         const supply = data.supply ? parseFloat(data.supply) : 9524; // Fallback to static 9524
-        const marketCap = data.price && supply ? (data.price * supply).toFixed(2) : 'N/A';
+        const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
         document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
         
         // Total supply from API or static fallback
@@ -22,7 +22,7 @@ async function fetchTokenStats() {
     } catch (error) {
         console.error('Error fetching token stats:', error);
         document.getElementById('holders').textContent = 'N/A';
-        document.getElementById('transactions').textContent = 'N/A';
+        document.getElementById('transfers').textContent = 'N/A';
         document.getElementById('price').textContent = 'N/A';
         document.getElementById('market-cap').textContent = 'N/A';
         document.getElementById('total-supply').textContent = '9524';
@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(this.getAttribute('href')).scrollIntoView({
                 behavior: 'smooth'
             });
-            // Close menu on mobile after click
             if (window.innerWidth <= 768) {
                 menuToggle.classList.remove('active');
                 navMenu.classList.remove('active');
