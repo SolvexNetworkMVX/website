@@ -391,3 +391,22 @@ footer p {
         margin: 0 auto;
     }
 }
+/* ... (restul codului rămâne identic) ... */
+
+/* New Button Styles */
+.about-btn, .tokenomics-btn, .social-btn {
+    padding: 12px 30px;
+    background: #00ffcc;
+    color: #0a0a1a;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: transform 0.3s ease, background 0.3s ease;
+    display: inline-block;
+    margin: 10px 0;
+}
+
+.about-btn:hover, .tokenomics-btn:hover, .social-btn:hover {
+    transform: scale(1.05);
+    background: #00ccaa;
+}
