@@ -34,18 +34,35 @@ async function fetchTokenStats(timeframe = '1h') {
         const data = await response.json();
 
         // Update stats
-        document.getElementById('holders').textContent = data.accounts ? data.accounts : 'N/A';
-        document.getElementById('transfers').textContent = data.transfers ? data.transfers : 'N/A';
+        document.getElementById('holders').textContent = data.accounts || 'N/A';
+        document.getElementById('transfers').textContent = data.transfers || 'N/A'; // Using transfers
         document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
         const supply = data.supply ? parseFloat(data.supply) : 9524;
         const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
         document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
-        document.getElementById('total-supply').textContent = data.supply ? data.supply : '9524';
+        document.getElementById('total-supply').textContent = data.supply || '9524';
 
-        // Update chart
-        const price = data.price ? data.price : 0;
+        // Update chart with price
+        const price = data.price || 0; // Fallback to 0 if no price
         const time = new Date().toLocaleTimeString();
-        updateChartData(time, price, timeframe);
+        if (!svxChart) {
+            const ctx = document.getElementById('svxChart').getContext('2d');
+            svxChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: chartOptions
+            });
+        }
+        chartData.labels.push(time);
+        chartData.datasets[0].data.push(price);
+
+        // Limit data points based on timeframe
+        const maxPoints = getMaxPoints(timeframe);
+        if (chartData.labels.length > maxPoints) {
+            chartData.labels.shift();
+            chartData.datasets[0].data.shift();
+        }
+        svxChart.update();
     } catch (error) {
         console.error('Error fetching token stats:', error);
         document.getElementById('holders').textContent = 'N/A';
@@ -57,31 +74,7 @@ async function fetchTokenStats(timeframe = '1h') {
 }
 
 // Update Chart Data Based on Timeframe
-function updateChartData(time, price, timeframe) {
-    if (!svxChart) {
-        const ctx = document.getElementById('svxChart').getContext('2d');
-        svxChart = new Chart(ctx, {
-            type: 'line',
-            data: chartData,
-            options: chartOptions
-        });
-    }
-
-    chartData.labels.push(time);
-    chartData.datasets[0].data.push(price);
-
-    // Limit data points based on timeframe
-    const maxPoints = getMaxPoints(timeframe);
-    if (chartData.labels.length > maxPoints) {
-        chartData.labels.shift();
-        chartData.datasets[0].data.shift();
-    }
-
-    svxChart.update();
-}
-
 function getMaxPoints(timeframe) {
-    const now = new Date();
     switch (timeframe) {
         case '1h': return 360; // ~10s intervals for 1 hour
         case '24h': return 8640; // ~10s intervals for 24 hours
