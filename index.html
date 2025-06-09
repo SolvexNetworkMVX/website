@@ -6,6 +6,7 @@
     <title>SolveX Network - Sustainable Growth on MultiversX</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -66,6 +67,15 @@
                     <p id="total-supply">N/A</p>
                 </div>
             </div>
+            <div class="chart-container">
+                <h3 class="chart-title">SVX Price Trend</h3>
+                <div class="timeframe-controls">
+                    <button class="timeframe-btn" data-timeframe="1h">1H</button>
+                    <button class="timeframe-btn" data-timeframe="24h">24H</button>
+                    <button class="timeframe-btn" data-timeframe="7d">7D</button>
+                </div>
+                <canvas id="svxChart"></canvas>
+            </div>
         </div>
     </section>
 
@@ -113,7 +123,7 @@
                 <a href="https://x.com/SolvexMVX" class="btn social-btn">Twitter</a>
                 <a href="https://github.com/SolvexNetworkMVX" class="btn social-btn">GitHub</a>
             </div>
-            <p class="social-note">Connect with us live—today is 03:20 PM EEST, June 09, 2025!</p>
+            <p class="social-note">Connect with us live—today is 03:26 PM EEST, June 09, 2025!</p>
         </div>
     </section>
 
