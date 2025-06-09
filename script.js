@@ -13,7 +13,7 @@ let chartData = {
 
 const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: false, // Permite control manual al dimensiunii
     scales: {
         x: { display: false },
         y: { beginAtZero: false, ticks: { color: '#ffffff' } }
@@ -35,7 +35,7 @@ async function fetchTokenStats(timeframe = '1h') {
 
         // Update stats
         document.getElementById('holders').textContent = data.accounts || 'N/A';
-        document.getElementById('transfers').textContent = data.transfers || 'N/A'; // Using transfers
+        document.getElementById('transfers').textContent = data.transfers || 'N/A';
         document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
         const supply = data.supply ? parseFloat(data.supply) : 9524;
         const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
@@ -43,7 +43,7 @@ async function fetchTokenStats(timeframe = '1h') {
         document.getElementById('total-supply').textContent = data.supply || '9524';
 
         // Update chart with price
-        const price = data.price || 0; // Fallback to 0 if no price
+        const price = data.price || 0;
         const time = new Date().toLocaleTimeString();
         if (!svxChart) {
             const ctx = document.getElementById('svxChart').getContext('2d');
