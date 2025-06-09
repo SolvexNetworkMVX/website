@@ -11,7 +11,7 @@ async function fetchTokenStats() {
         document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(4)}` : 'N/A';
         
         // Calculate market cap: price * supply
-        const supply = data.supply ? parseFloat(data.supply) : 9524; // Fallback to static 9524 if API doesn't provide
+        const supply = data.supply ? parseFloat(data.supply) : 9524; // Fallback to static 9524
         const marketCap = data.price && supply ? (data.price * supply).toFixed(2) : 'N/A';
         document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
         
@@ -30,6 +30,28 @@ async function fetchTokenStats() {
 // Run fetch on page load
 document.addEventListener('DOMContentLoaded', () => {
     fetchTokenStats();
-    // Refresh stats every 30 seconds for real-time updates
     setInterval(fetchTokenStats, 30000);
+
+    // Hamburger Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // Smooth Scroll for Navigation Links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+            // Close menu on mobile after click
+            if (window.innerWidth <= 768) {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
+    });
 });
