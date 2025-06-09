@@ -7,8 +7,10 @@ async function fetchTokenStats() {
         
         // Update dashboard with fetched data
         document.getElementById('holders').textContent = data.accounts ? data.accounts : 'N/A';
-        document.getElementById('transactions').textContent = data.transactions ? data.transactions : 'N/A';
-        document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(4)}` : 'N/A';
+        document.getElementById('transactions').textContent = data.transactions ? data.transactions : 'N/A'; // Still using transactions as a proxy for transfers
+        
+        // Price with 2 decimals
+        document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
         
         // Calculate market cap: price * supply
         const supply = data.supply ? parseFloat(data.supply) : 9524; // Fallback to static 9524
