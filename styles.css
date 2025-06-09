@@ -147,8 +147,25 @@ nav {
     animation: fadeInUp 1s ease-in 0.3s both;
 }
 
+.cta-buttons {
+    margin-top: 20px;
+}
+
 .cta-buttons .btn {
-    margin: 0 8px;
+    margin: 0 10px;
+    padding: 12px 25px;
+    background: #00ffcc;
+    color: #0a0a1a;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.cta-buttons .btn:hover {
+    background: #00ccaa;
+    transform: scale(1.05);
 }
 
 /* Dashboard Section */
@@ -212,7 +229,7 @@ nav {
     background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
-    overflow: hidden; /* Previne depășirea conținutului */
+    overflow: hidden;
 }
 
 .chart-title {
@@ -250,8 +267,8 @@ nav {
 
 #svxChart {
     max-width: 100%;
-    height: 250px; /* Înălțime fixă pentru grafic */
-    max-height: 250px; /* Limitează înălțimea maximă */
+    height: 150px; /* Înălțime redusă semnificativ */
+    max-height: 150px;
 }
 
 /* General Section */
@@ -382,8 +399,8 @@ footer p {
         padding: 15px;
     }
     #svxChart {
-        height: 200px; /* Înălțime mai mică pe ecrane mici */
-        max-height: 200px;
+        height: 120px; /* Înălțime redusă pe ecrane mici */
+        max-height: 120px;
     }
     .timeframe-controls {
         flex-direction: column;
@@ -395,27 +412,26 @@ footer p {
     }
 }
 
-/* New Button Styles */
+/* Button Styles */
 .btn {
-    padding: 12px 30px;
+    padding: 12px 25px;
     background: #00ffcc;
     color: #0a0a1a;
-    text-decoration: none;
     border: none;
-    border-radius: 50px;
+    border-radius: 10px;
     font-weight: 600;
-    transition: transform 0.3s ease, background 0.3s ease;
+    transition: background 0.3s ease, transform 0.3s ease;
     cursor: pointer;
     display: inline-block;
     margin: 10px 0;
 }
 
 .btn:hover {
-    transform: scale(1.05);
     background: #00ccaa;
+    transform: scale(1.05);
 }
 
-.about-btn, .tokenomics-btn, .social-btn {
+.about-btn, .tokenomics-btn, .social-btn, .liquidity-btn {
     padding: 12px 30px;
     background: #00ffcc;
     color: #0a0a1a;
@@ -428,7 +444,7 @@ footer p {
     margin: 10px 0;
 }
 
-.about-btn:hover, .tokenomics-btn:hover, .social-btn:hover {
+.about-btn:hover, .tokenomics-btn:hover, .social-btn:hover, .liquidity-btn:hover {
     transform: scale(1.05);
     background: #00ccaa;
 }
