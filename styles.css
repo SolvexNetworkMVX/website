@@ -6,7 +6,7 @@
 }
 
 body {
-    background: #0a0a1a;
+    background: linear-gradient(180deg, #0a0a1a, #12122a);
     color: #ffffff;
     line-height: 1.6;
     overflow-x: hidden;
@@ -21,12 +21,12 @@ body {
 /* Header */
 header {
     background: linear-gradient(90deg, #1a1a3a, #0a0a1a);
-    padding: 15px 0;
+    padding: 12px 0;
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    transition: background 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 255, 204, 0.1);
 }
 
 header .container {
@@ -36,14 +36,15 @@ header .container {
 }
 
 .logo {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: 700;
     color: #00ffcc;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .logo:hover {
     color: #00ccaa;
+    text-shadow: 0 0 10px #00ffcc;
 }
 
 nav {
@@ -57,18 +58,18 @@ nav {
 }
 
 .nav-menu li {
-    margin-left: 25px;
+    margin-left: 22px;
 }
 
 .nav-menu li a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: color 0.3s ease;
 }
 
 .nav-menu li a:hover {
-    color: #00ffcc;
+    color: #00e6b8;
 }
 
 /* Hamburger Menu */
@@ -79,7 +80,7 @@ nav {
 }
 
 .menu-toggle span {
-    width: 22px;
+    width: 20px;
     height: 2px;
     background: #ffffff;
     margin: 2px 0;
@@ -93,19 +94,20 @@ nav {
     .nav-menu {
         display: none;
         position: absolute;
-        top: 60px;
+        top: 55px;
         left: 0;
         right: 0;
-        background: #1a1a3a;
+        background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
         flex-direction: column;
-        padding: 15px 0;
+        padding: 12px 0;
         text-align: center;
+        border-radius: 0 0 10px 10px;
     }
     .nav-menu.active {
         display: flex;
     }
     .nav-menu li {
-        margin: 12px 0;
+        margin: 10px 0;
     }
     .menu-toggle.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
@@ -121,164 +123,208 @@ nav {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
-    padding: 120px 0 60px;
+    padding: 100px 0 40px;
     text-align: center;
-    min-height: 80vh;
+    min-height: 70vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
 }
 
-.hero h2 {
-    font-size: 3rem;
-    margin-bottom: 15px;
+.hero-title {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
     color: #00ffcc;
-    animation: fadeIn 1s ease-in;
+    animation: fadeInUp 1s ease-in;
+    text-shadow: 0 0 15px #00ffcc;
 }
 
-.hero p {
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    animation: fadeIn 1s ease-in 0.3s both;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 30px;
-    background: #00ffcc;
-    color: #0a0a1a;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.btn:hover {
-    transform: scale(1.05);
-    background: #00ccaa;
+.hero-subtitle {
+    font-size: 1rem;
+    margin-bottom: 25px;
+    animation: fadeInUp 1s ease-in 0.3s both;
 }
 
 .cta-buttons .btn {
-    margin: 0 10px;
+    margin: 0 8px;
 }
 
 /* Dashboard Section */
 .dashboard {
-    padding: 60px 0;
-    background: #12122a;
-    min-height: 60vh;
+    padding: 50px 0;
+    background: #0f0f24;
+    min-height: 55vh;
+    position: relative;
+    z-index: 1;
 }
 
-.dashboard h2 {
+.dashboard-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    color: #00ffcc;
-    animation: fadeIn 1s ease-in;
+    font-size: 2.3rem;
+    margin-bottom: 25px;
+    color: #00e6b8;
+    animation: fadeInUp 1s ease-in;
+    text-transform: uppercase;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 18px;
     justify-items: center;
 }
 
 .stat-card {
-    background: #1a1a3a;
-    padding: 20px;
-    border-radius: 12px;
+    background: linear-gradient(145deg, #1a1a3a, #13132a);
+    padding: 18px;
+    border-radius: 10px;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    max-width: 220px;
+    max-width: 200px;
+    border: 1px solid rgba(0, 255, 204, 0.1);
 }
 
 .stat-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 8px 15px rgba(0, 255, 204, 0.2);
 }
 
 .stat-card h3 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: #00ccaa;
 }
 
 .stat-card p {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: #00ffcc;
 }
 
 /* General Section */
 .section {
-    padding: 80px 0;
+    padding: 60px 0;
     text-align: center;
-    min-height: 50vh;
+    min-height: 45vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
-.section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-    color: #00ffcc;
-    animation: fadeIn 1s ease-in;
+.section-title {
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+    color: #00e6b8;
+    animation: fadeInUp 1s ease-in;
+    text-shadow: 0 0 10px #00ffcc;
 }
 
-.section p {
-    font-size: 1.1rem;
-    max-width: 800px;
-    margin: 0 auto 30px;
+.content-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
-/* Social Section */
+.about-section {
+    background: linear-gradient(90deg, #0a0a1a, #12122a);
+}
+
+.about-image {
+    width: 300px;
+    height: 200px;
+    background-size: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+}
+
+.tokenomics-section {
+    background: #0f0f24;
+}
+
+.tokenomics-chart {
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+}
+
+.liquidity-section {
+    background: linear-gradient(180deg, #1a1a3a, #0a0a1a);
+}
+
+.liquidity-btn {
+    margin-top: 20px;
+}
+
+.social-section {
+    background: #12122a;
+}
+
+.social-note {
+    font-size: 0.9rem;
+    color: #00ccaa;
+    margin-top: 20px;
+}
+
 .link-buttons .btn {
-    margin: 10px;
+    margin: 8px;
 }
 
 /* Footer */
 footer {
-    background: #1a1a3a;
-    padding: 20px 0;
+    background: linear-gradient(90deg, #1a1a3a, #0a0a1a);
+    padding: 15px 0;
     text-align: center;
+    border-top: 1px solid rgba(0, 255, 204, 0.1);
 }
 
 footer p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 /* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .hero h2 {
-        font-size: 2rem;
+    .hero-title {
+        font-size: 1.8rem;
     }
-    .hero p {
-        font-size: 1rem;
+    .hero-subtitle {
+        font-size: 0.9rem;
     }
     .cta-buttons .btn {
         display: block;
-        margin: 10px auto;
-        width: 180px;
+        margin: 8px auto;
+        width: 160px;
     }
     .stats-grid {
         grid-template-columns: 1fr;
     }
-    .dashboard h2, .section h2 {
-        font-size: 2rem;
+    .dashboard-title, .section-title {
+        font-size: 1.8rem;
     }
     .section {
-        padding: 50px 0;
-        min-height: 40vh;
+        padding: 40px 0;
+        min-height: 35vh;
     }
     .hero {
-        padding: 100px 0 50px;
-        min-height: 70vh;
+        padding: 80px 0 40px;
+        min-height: 60vh;
+    }
+    .content-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+    .about-image, .tokenomics-chart {
+        margin: 20px auto;
     }
 }
