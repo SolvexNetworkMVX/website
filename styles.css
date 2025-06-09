@@ -21,7 +21,7 @@ body {
 /* Header */
 header {
     background: linear-gradient(90deg, #1a1a3a, #0a0a1a);
-    padding: 20px 0;
+    padding: 15px 0;
     position: fixed;
     width: 100%;
     top: 0;
@@ -36,7 +36,7 @@ header .container {
 }
 
 .logo {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #00ffcc;
     transition: color 0.3s ease;
@@ -57,13 +57,13 @@ nav {
 }
 
 .nav-menu li {
-    margin-left: 30px;
+    margin-left: 25px;
 }
 
 .nav-menu li a {
     color: #ffffff;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1rem;
     transition: color 0.3s ease;
 }
 
@@ -79,8 +79,8 @@ nav {
 }
 
 .menu-toggle span {
-    width: 25px;
-    height: 3px;
+    width: 22px;
+    height: 2px;
     background: #ffffff;
     margin: 2px 0;
     transition: all 0.3s ease;
@@ -93,19 +93,19 @@ nav {
     .nav-menu {
         display: none;
         position: absolute;
-        top: 70px;
+        top: 60px;
         left: 0;
         right: 0;
         background: #1a1a3a;
         flex-direction: column;
-        padding: 20px 0;
+        padding: 15px 0;
         text-align: center;
     }
     .nav-menu.active {
         display: flex;
     }
     .nav-menu li {
-        margin: 15px 0;
+        margin: 12px 0;
     }
     .menu-toggle.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
@@ -121,30 +121,30 @@ nav {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
-    padding: 200px 0 120px;
+    padding: 120px 0 60px;
     text-align: center;
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .hero h2 {
-    font-size: 3.5rem;
-    margin-bottom: 20px;
+    font-size: 3rem;
+    margin-bottom: 15px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
 
 .hero p {
-    font-size: 1.3rem;
-    margin-bottom: 40px;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
     animation: fadeIn 1s ease-in 0.3s both;
 }
 
 .btn {
     display: inline-block;
-    padding: 15px 35px;
+    padding: 12px 30px;
     background: #00ffcc;
     color: #0a0a1a;
     text-decoration: none;
@@ -159,93 +159,93 @@ nav {
 }
 
 .cta-buttons .btn {
-    margin: 0 15px;
+    margin: 0 10px;
 }
 
 /* Dashboard Section */
 .dashboard {
-    padding: 100px 0;
+    padding: 60px 0;
     background: #12122a;
-    min-height: 80vh;
+    min-height: 60vh;
 }
 
 .dashboard h2 {
     text-align: center;
-    font-size: 2.8rem;
-    margin-bottom: 50px;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
     justify-items: center;
 }
 
 .stat-card {
     background: #1a1a3a;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 12px;
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
-    max-width: 250px;
+    max-width: 220px;
 }
 
 .stat-card:hover {
-    transform: translateY(-15px);
-    box-shadow: 0 15px 25px rgba(0, 255, 204, 0.3);
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
 }
 
 .stat-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
 }
 
 .stat-card p {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     color: #00ffcc;
 }
 
 /* General Section */
 .section {
-    padding: 120px 0;
+    padding: 80px 0;
     text-align: center;
-    min-height: 70vh;
+    min-height: 50vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
 .section h2 {
-    font-size: 2.8rem;
-    margin-bottom: 30px;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
     color: #00ffcc;
     animation: fadeIn 1s ease-in;
 }
 
 .section p {
-    font-size: 1.2rem;
-    max-width: 900px;
-    margin: 0 auto 40px;
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto 30px;
 }
 
 /* Social Section */
 .link-buttons .btn {
-    margin: 15px;
+    margin: 10px;
 }
 
 /* Footer */
 footer {
     background: #1a1a3a;
-    padding: 30px 0;
+    padding: 20px 0;
     text-align: center;
 }
 
 footer p {
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 /* Animations */
@@ -257,28 +257,28 @@ footer p {
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero h2 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     .hero p {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     .cta-buttons .btn {
         display: block;
-        margin: 15px auto;
-        width: 200px;
+        margin: 10px auto;
+        width: 180px;
     }
     .stats-grid {
         grid-template-columns: 1fr;
     }
     .dashboard h2, .section h2 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     .section {
-        padding: 80px 0;
-        min-height: 50vh;
+        padding: 50px 0;
+        min-height: 40vh;
     }
     .hero {
-        padding: 150px 0 80px;
-        min-height: 90vh;
+        padding: 100px 0 50px;
+        min-height: 70vh;
     }
 }
