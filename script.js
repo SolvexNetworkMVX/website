@@ -1,46 +1,18 @@
-// Firebase Config
+// Firebase Config (Replace with your Firebase config from Console)
 const firebaseConfig = {
-  apiKey: "AIzaSyC0rcr...SSLCs_fmvT4_dhuMbrIUB84s",
+apiKey: "AIzaSyCQrct-S5LCs_fTmvT4-d4huMbRrIU8B4s",
   authDomain: "solvexchart.firebaseapp.com",
   projectId: "solvexchart",
-  storageBucket: "solvexchart.appspot.com",
-  messagingSenderId: "80975419718",
-  appId: "1:80975419718:web:f951f228285e963cb2687",
+  storageBucket: "solvexchart.firebasestorage.app",
+  messagingSenderId: "809750419718",
+  appId: "1:809750419718:web:f95f12282885e963cb2687",
   measurementId: "G-SMNCKBCHRG"
-};
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Chart.js Setup
-const ctx = document.getElementById('svxChart').getContext('2d');
-const chart = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: [],
-    datasets: [{
-      label: 'SVX Price (USD)',
-      data: [],
-      borderColor: '#00ffcc',
-      backgroundColor: 'rgba(0, 255, 204, 0.2)',
-      tension: 0.1
-    }]
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    scales: {
-      x: { display: false },
-      y: { beginAtZero: false }
-    },
-    plugins: {
-      legend: { display: false }
-    }
-  }
-});
-
-// Fetch and Update Token Stats
+// Fetch token statistics and update stats
 async function fetchTokenStats() {
   try {
     const response = await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1');
@@ -54,22 +26,6 @@ async function fetchTokenStats() {
     const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
     document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
     document.getElementById('total-supply').textContent = data.supply || '9524';
-
-    // Update Chart with New Price
-    const now = new Date().toLocaleTimeString();
-    chart.data.labels.push(now);
-    chart.data.datasets[0].data.push(data.price || 0);
-    if (chart.data.labels.length > 10) {
-      chart.data.labels.shift();
-      chart.data.datasets[0].data.shift();
-    }
-    chart.update();
-
-    // Save Chart State to Firebase
-    const state = { labels: chart.data.labels, data: chart.data.datasets[0].data };
-    db.collection('chartStates').doc('userState').set({ state })
-      .then(() => console.log('Chart state saved'))
-      .catch(error => console.error('Error saving state:', error));
   } catch (error) {
     console.error('Error fetching token stats:', error);
     document.getElementById('holders').textContent = 'N/A';
@@ -80,15 +36,75 @@ async function fetchTokenStats() {
   }
 }
 
-// Restore Chart State from Firebase on Load
+// Initialize TradingView Chart with Firebase state management
+const chart = new TradingView.widget({
+  symbol: 'SVX-cc81e1',
+  datafeed: {
+    onReady: (callback) => {
+      setTimeout(() => callback({
+        supports_search: false,
+        supports_group_request: false,
+        supported_resolutions: ["1", "5", "15", "30", "60", "1D", "1W", "1M"]
+      }), 0);
+    },
+    resolveSymbol: async (symbolName, onSymbolResolvedCallback) => {
+      const data = await (await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1')).json();
+      onSymbolResolvedCallback({
+        name: symbolName,
+        description: 'SVX Token on MultiversX',
+        type: 'crypto',
+        session: '24x7',
+        timezone: 'Etc/UTC',
+        ticker: symbolName,
+        exchange: 'xExchange',
+        minmov: 1,
+        pricescale: 1000000,
+        has_intraday: true,
+        intraday_multipliers: ['1', '5', '15', '30', '60'],
+        supported_resolution: ['1', '5', '15', '30', '60', '1D', '1W', '1M']
+      });
+    },
+    getBars: async (symbolInfo, resolution, rangeStartDate, rangeEndDate, onDataCallback) => {
+      const data = await (await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1')).json();
+      const bars = [{
+        time: Math.floor(Date.now() / 1000),
+        open: data.price || 0,
+        high: data.price || 0,
+        low: data.price || 0,
+        close: data.price || 0,
+        volume: data.transfers || 0
+      }];
+      onDataCallback(bars, { noData: !bars.length });
+    }
+  },
+  interval: 'D',
+  container_id: 'tradingview_chart',
+  library_path: '/path/to/charting_library/',
+  locale: 'en',
+  theme: 'dark',
+  height: 150,
+  width: '100%',
+  disabled_features: ['header_saveload'],
+  enable_publishing: false,
+  allow_symbol_change: false
+});
+
+// Save chart state to Firebase when price fluctuates
+chart.onChartReady(() => {
+  chart.subscribe('onVisibleRangeChanged', () => {
+    const state = chart.getState(); // Captures price and range
+    db.collection('chartStates').doc('userState').set({ state })
+      .then(() => console.log('Chart state saved'))
+      .catch(error => console.error('Error saving state:', error));
+  });
+});
+
+// Restore chart state from Firebase on load
 window.addEventListener('load', () => {
   db.collection('chartStates').doc('userState').get()
     .then(doc => {
       if (doc.exists) {
-        const state = doc.data().state;
-        chart.data.labels = state.labels || [];
-        chart.data.datasets[0].data = state.data || [];
-        chart.update();
+        chart.setState(doc.data().state);
       }
     })
     .catch(error => console.error('Error loading state:', error));
@@ -119,7 +135,7 @@ window.addEventListener('load', () => {
     });
   });
 
-  // Timeframe Button Event Listeners (Estetic, fără funcționalitate completă)
+  // Timeframe Button Event Listeners
   document.querySelectorAll('.timeframe-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
