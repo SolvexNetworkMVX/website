@@ -31,7 +31,7 @@ const chart = new Chart(ctx, {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      x: { display: false },
+      x: { display: true }, // Activat pentru a vedea etichetele de timp
       y: { beginAtZero: false }
     },
     plugins: {
@@ -67,8 +67,9 @@ async function fetchTokenStats() {
 
     // Save Chart State to Firebase
     const state = { labels: chart.data.labels, data: chart.data.datasets[0].data };
+    console.log('Saving state:', state); // Log pentru depanare
     db.collection('chartStates').doc('userState').set({ state })
-      .then(() => console.log('Chart state saved'))
+      .then(() => console.log('Chart state saved successfully'))
       .catch(error => console.error('Error saving state:', error));
   } catch (error) {
     console.error('Error fetching token stats:', error);
@@ -82,13 +83,17 @@ async function fetchTokenStats() {
 
 // Restore Chart State from Firebase on Load
 window.addEventListener('load', () => {
+  console.log('Loading chart state...'); // Log pentru depanare
   db.collection('chartStates').doc('userState').get()
     .then(doc => {
       if (doc.exists) {
         const state = doc.data().state;
+        console.log('Loaded state:', state); // Log pentru depanare
         chart.data.labels = state.labels || [];
         chart.data.datasets[0].data = state.data || [];
         chart.update();
+      } else {
+        console.log('No saved state found');
       }
     })
     .catch(error => console.error('Error loading state:', error));
