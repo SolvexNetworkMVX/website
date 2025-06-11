@@ -6,6 +6,7 @@
     <title>SolveX Network - Sustainable Growth on MultiversX</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Header -->
@@ -73,12 +74,9 @@
                     <button class="timeframe-btn" data-timeframe="24h">24H</button>
                     <button class="timeframe-btn" data-timeframe="7d">7D</button>
                 </div>
-                <div class="tradingview-widget-container">
-                    <div id="tradingview_chart"></div>
-                    <script type="text/javascript" src="/path/to/charting_library/charting_library.min.js"></script>
-                    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-                    <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-                </div>
+                <canvas id="svxChart"></canvas>
+                <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+                <script type="text/javascript" src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
             </div>
         </div>
     </section>
@@ -129,7 +127,7 @@
                 <button class="btn social-btn" onclick="window.location.href='https://x.com/SolvexMVX'">Twitter</button>
                 <button class="btn social-btn" onclick="window.location.href='https://github.com/SolvexNetworkMVX'">GitHub</button>
             </div>
-            <p class="social-note">Connect with us live—today is 08:06 PM EEST, June 11, 2025!</p>
+            <p class="social-note">Connect with us live—today is 08:12 PM EEST, June 11, 2025!</p>
         </div>
     </section>
 
