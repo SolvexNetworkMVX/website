@@ -1,146 +1,127 @@
-// Firebase Config (Replace with your Firebase config from Console)
-const firebaseConfig = {
-apiKey: "AIzaSyCQrct-S5LCs_fTmvT4-d4huMbRrIU8B4s",
-  authDomain: "solvexchart.firebaseapp.com",
-  projectId: "solvexchart",
-  storageBucket: "solvexchart.firebasestorage.app",
-  messagingSenderId: "809750419718",
-  appId: "1:809750419718:web:f95f12282885e963cb2687",
-  measurementId: "G-SMNCKBCHRG"
+// Chart Data and Configuration
+let chartData = {
+    labels: [],
+    datasets: [{
+        label: 'SVX Price (USD)',
+        data: [],
+        borderColor: '#00ffcc',
+        backgroundColor: 'rgba(0, 255, 204, 0.2)',
+        tension: 0.4,
+        fill: true
+    }]
+};
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: { display: false },
+        y: { beginAtZero: false, ticks: { color: '#ffffff' } }
+    },
+    plugins: {
+        legend: { labels: { color: '#ffffff' } },
+        tooltip: { backgroundColor: '#1a1a3a', titleColor: '#00ffcc', bodyColor: '#ffffff' }
+    }
+};
 
-// Fetch token statistics and update stats
-async function fetchTokenStats() {
-  try {
-    const response = await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1');
-    if (!response.ok) throw new Error('API request failed');
-    const data = await response.json();
+let svxChart;
 
-    document.getElementById('holders').textContent = data.accounts || 'N/A';
-    document.getElementById('transfers').textContent = data.transfers || 'N/A';
-    document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
-    const supply = data.supply ? parseFloat(data.supply) : 9524;
-    const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
-    document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
-    document.getElementById('total-supply').textContent = data.supply || '9524';
-  } catch (error) {
-    console.error('Error fetching token stats:', error);
-    document.getElementById('holders').textContent = 'N/A';
-    document.getElementById('transfers').textContent = 'N/A';
-    document.getElementById('price').textContent = 'N/A';
-    document.getElementById('market-cap').textContent = 'N/A';
-    document.getElementById('total-supply').textContent = '9524';
-  }
+// Fetch token statistics and update chart
+async function fetchTokenStats(timeframe = '1h') {
+    try {
+        const response = await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1');
+        if (!response.ok) throw new Error('API request failed');
+        const data = await response.json();
+
+        // Update stats
+        document.getElementById('holders').textContent = data.accounts || 'N/A';
+        document.getElementById('transfers').textContent = data.transfers || 'N/A'; // Using transfers
+        document.getElementById('price').textContent = data.price ? `$${data.price.toFixed(2)}` : 'N/A';
+        const supply = data.supply ? parseFloat(data.supply) : 9524;
+        const marketCap = data.price && supply ? (data.price * supply).toFixed(0) : 'N/A';
+        document.getElementById('market-cap').textContent = marketCap !== 'N/A' ? `$${marketCap}` : 'N/A';
+        document.getElementById('total-supply').textContent = data.supply || '9524';
+
+        // Update chart with price
+        const price = data.price || 0; // Fallback to 0 if no price
+        const time = new Date().toLocaleTimeString();
+        if (!svxChart) {
+            const ctx = document.getElementById('svxChart').getContext('2d');
+            svxChart = new Chart(ctx, {
+                type: 'line',
+                data: chartData,
+                options: chartOptions
+            });
+        }
+        chartData.labels.push(time);
+        chartData.datasets[0].data.push(price);
+
+        // Limit data points based on timeframe
+        const maxPoints = getMaxPoints(timeframe);
+        if (chartData.labels.length > maxPoints) {
+            chartData.labels.shift();
+            chartData.datasets[0].data.shift();
+        }
+        svxChart.update();
+    } catch (error) {
+        console.error('Error fetching token stats:', error);
+        document.getElementById('holders').textContent = 'N/A';
+        document.getElementById('transfers').textContent = 'N/A';
+        document.getElementById('price').textContent = 'N/A';
+        document.getElementById('market-cap').textContent = 'N/A';
+        document.getElementById('total-supply').textContent = '9524';
+    }
 }
 
-// Initialize TradingView Chart with Firebase state management
-const chart = new TradingView.widget({
-  symbol: 'SVX-cc81e1',
-  datafeed: {
-    onReady: (callback) => {
-      setTimeout(() => callback({
-        supports_search: false,
-        supports_group_request: false,
-        supported_resolutions: ["1", "5", "15", "30", "60", "1D", "1W", "1M"]
-      }), 0);
-    },
-    resolveSymbol: async (symbolName, onSymbolResolvedCallback) => {
-      const data = await (await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1')).json();
-      onSymbolResolvedCallback({
-        name: symbolName,
-        description: 'SVX Token on MultiversX',
-        type: 'crypto',
-        session: '24x7',
-        timezone: 'Etc/UTC',
-        ticker: symbolName,
-        exchange: 'xExchange',
-        minmov: 1,
-        pricescale: 1000000,
-        has_intraday: true,
-        intraday_multipliers: ['1', '5', '15', '30', '60'],
-        supported_resolution: ['1', '5', '15', '30', '60', '1D', '1W', '1M']
-      });
-    },
-    getBars: async (symbolInfo, resolution, rangeStartDate, rangeEndDate, onDataCallback) => {
-      const data = await (await fetch('https://devnet-api.multiversx.com/tokens/SVX-cc81e1')).json();
-      const bars = [{
-        time: Math.floor(Date.now() / 1000),
-        open: data.price || 0,
-        high: data.price || 0,
-        low: data.price || 0,
-        close: data.price || 0,
-        volume: data.transfers || 0
-      }];
-      onDataCallback(bars, { noData: !bars.length });
+// Update Chart Data Based on Timeframe
+function getMaxPoints(timeframe) {
+    switch (timeframe) {
+        case '1h': return 360; // ~10s intervals for 1 hour
+        case '24h': return 8640; // ~10s intervals for 24 hours
+        case '7d': return 60480; // ~10s intervals for 7 days
+        default: return 360;
     }
-  },
-  interval: 'D',
-  container_id: 'tradingview_chart',
-  library_path: '/path/to/charting_library/',
-  locale: 'en',
-  theme: 'dark',
-  height: 150,
-  width: '100%',
-  disabled_features: ['header_saveload'],
-  enable_publishing: false,
-  allow_symbol_change: false
-});
+}
 
-// Save chart state to Firebase when price fluctuates
-chart.onChartReady(() => {
-  chart.subscribe('onVisibleRangeChanged', () => {
-    const state = chart.getState(); // Captures price and range
-    db.collection('chartStates').doc('userState').set({ state })
-      .then(() => console.log('Chart state saved'))
-      .catch(error => console.error('Error saving state:', error));
-  });
-});
+// Timeframe Controls
+function setTimeframe(timeframe) {
+    document.querySelectorAll('.timeframe-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.timeframe-btn[data-timeframe="${timeframe}"]`).classList.add('active');
+    chartData.labels = [];
+    chartData.datasets[0].data = [];
+    fetchTokenStats(timeframe);
+}
 
-// Restore chart state from Firebase on load
-window.addEventListener('load', () => {
-  db.collection('chartStates').doc('userState').get()
-    .then(doc => {
-      if (doc.exists) {
-        chart.setState(doc.data().state);
-      }
-    })
-    .catch(error => console.error('Error loading state:', error));
+// Run on page load
+document.addEventListener('DOMContentLoaded', () => {
+    fetchTokenStats('1h');
+    setInterval(() => fetchTokenStats(document.querySelector('.timeframe-btn.active')?.dataset.timeframe || '1h'), 10000);
 
-  // Fetch token stats on load and every 10 seconds
-  fetchTokenStats();
-  setInterval(fetchTokenStats, 10000);
-
-  // Hamburger Menu Toggle
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navMenu = document.querySelector('.nav-menu');
-  menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('active');
-    navMenu.classList.toggle('active');
-  });
-
-  // Smooth Scroll for Navigation Links
-  document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      document.querySelector(this.getAttribute('href')).scrollIntoView({
-        behavior: 'smooth'
-      });
-      if (window.innerWidth <= 768) {
-        menuToggle.classList.remove('active');
-        navMenu.classList.remove('active');
-      }
+    // Hamburger Menu Toggle
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
     });
-  });
 
-  // Timeframe Button Event Listeners
-  document.querySelectorAll('.timeframe-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    // Smooth Scroll for Navigation Links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+            if (window.innerWidth <= 768) {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+        });
     });
-  });
-  document.querySelector('.timeframe-btn[data-timeframe="1h"]').classList.add('active');
+
+    // Timeframe Button Event Listeners
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.addEventListener('click', () => setTimeframe(btn.dataset.timeframe));
+    });
+    document.querySelector('.timeframe-btn[data-timeframe="1h"]').classList.add('active');
 });
